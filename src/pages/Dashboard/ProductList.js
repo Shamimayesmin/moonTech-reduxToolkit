@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
+import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts, removeProduct } from "../../features/products/productsSlice";
+import {
+	getProducts,
+	removeProduct,
+} from "../../features/products/productsSlice";
 
 const ProductList = () => {
 	// const [products, setProducts] = useState([]);
 
-  const dispatch = useDispatch();
-  const {products} = useSelector((state) => state.products)
+	const dispatch = useDispatch();
+	const { products , isLoading, deleteSuccess, isError, error} = useSelector((state) => state.products);
 
 	// useEffect(() => {
 	// 	fetch("http://localhost:5000/products")
@@ -14,9 +18,21 @@ const ProductList = () => {
 	// 		.then((data) => setProducts(data.data));
 	// });
 
-  useEffect(() => {
-    dispatch(getProducts())
+	useEffect(() => {
+		dispatch(getProducts());
 	}, [dispatch]);
+
+
+	useEffect(()=>{
+		if(!isLoading && deleteSuccess){
+			toast.success("successfully Removed")
+
+		}
+	},[isLoading, deleteSuccess])
+
+	if(isLoading){
+		return <p>Loading ....</p>
+	}
 	return (
 		<div className="flex flex-col justify-center items-center h-full w-full ">
 			<div className="w-full max-w-7xl mx-auto rounded-lg  bg-white shadow-lg border border-gray-200">
