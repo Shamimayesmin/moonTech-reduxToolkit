@@ -9,27 +9,25 @@ const Home = () => {
 
 	const dispatch = useDispatch();
 
-  const filter = useSelector((state)=>state.filter)
-  const {brands, stock}= filter;
-  const {products,isLoading} = useSelector((state)=> state.products)
-  const activeClass = "text-white  bg-indigo-500 border-white";
+	const filter = useSelector((state) => state.filter);
+	const { brands, stock } = filter;
+	const { products, isLoading } = useSelector((state) => state.products);
+	const activeClass = "text-white  bg-indigo-500 border-white";
 
 	useEffect(() => {
 		// fetch("http://localhost:5000/products")
 		// 	.then((res) => res.json())
 		// 	.then((data) => setProducts(data.data));
 
-    dispatch(getProducts())
+		dispatch(getProducts());
 	}, [dispatch]);
 	// console.log(products);
 
+	let content;
 
-  let content;
-
-  if(isLoading){
-    content = <h1>Loading ...</h1>
-  }
-
+	if (isLoading) {
+		content = <h1>Loading ...</h1>;
+	}
 
 	if (products.length) {
 		content = products.map((product) => (
@@ -40,43 +38,54 @@ const Home = () => {
 	if (products.length && (filter.stock || filter.brands.length)) {
 		content = products
 			.filter((product) => {
-        if(stock){
-          return product.status === true;
-        }
-        return product;
-      })
-      .filter((product) => {
-        if(filter.brands.length){
-          return filter.brands.includes(product.brand);
-        }
-        return product;
-      })
+				if (stock) {
+					return product.status === true;
+				}
+				return product;
+			})
+			.filter((product) => {
+				if (filter.brands.length) {
+					return filter.brands.includes(product.brand);
+				}
+				return product;
+			})
 			.map((product) => <ProductCard key={product.model} product={product} />);
 	}
 
 	return (
 		<div>
 			<div className="justify-center items-center flex gap-3">
-      <button className={`border px-3 py-2 rounded-full font-semibold ${
+				<button
+					className={`border px-3 py-2 rounded-full font-semibold ${
 						stock ? activeClass : null
-					} `} onClick={() => dispatch(toggle())}>
-				In stock
-			</button>
-			<button className={`border px-3 py-2 rounded-full font-semibold ${
+					} `}
+					onClick={() => dispatch(toggle())}
+				>
+					In stock
+				</button>
+				<button
+					className={`border px-3 py-2 rounded-full font-semibold ${
 						brands.includes("amd") ? activeClass : null
-					}`} onClick={() => dispatch(toggleBrands("amd"))}>
-				AMD
-			</button>
-			<button className={`border px-3 py-2 rounded-full font-semibold ${
+					}`}
+					onClick={() => dispatch(toggleBrands("amd"))}
+				>
+					AMD
+				</button>
+				<button
+					className={`border px-3 py-2 rounded-full font-semibold ${
 						brands.includes("intel") ? activeClass : null
-					}`} onClick={() => dispatch(toggleBrands("intel"))}>Intel</button>
-      </div>
+					}`}
+					onClick={() => dispatch(toggleBrands("intel"))}
+				>
+					Intel
+				</button>
+			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-14 mx-auto my-10">
 				{/* {products?.map((product) => (
 					<ProductCard key={product._id} product={product} />
 				))} */}
-        {content}
+				{content}
 			</div>
 		</div>
 	);
